@@ -23,6 +23,14 @@ public class LoginApplicationConfig {
 		return viewResolver;
 	}
 	
-	
+	@Bean(name = "dataSource")
+	 public DriverManagerDataSource dataSource() {
+	     DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+	     driverManagerDataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+	     driverManagerDataSource.setUrl("");
+	     driverManagerDataSource.setUsername("");
+	     driverManagerDataSource.setPassword("");
+	     return driverManagerDataSource;
+	 }
 	
 }

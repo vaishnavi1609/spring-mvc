@@ -4,10 +4,9 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Access Denied</title>
+<title>Insert title here</title>
 </head>
 <body>
-<h1>You do not have permission to access this page!
-</h1>
+hello admin
 </body>
 </html>

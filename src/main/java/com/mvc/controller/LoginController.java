@@ -1,14 +1,18 @@
 package com.mvc.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.mvc.service.ServiceClass;
+
 @Controller
 public class LoginController {
+	
+	@Autowired
+	ServiceClass service;
 
 	@GetMapping(value = { "/"})
 	public ModelAndView welcomePage() {
@@ -21,6 +25,7 @@ public class LoginController {
 	public ModelAndView homePage() {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("homepage");
+		service.display();
 		return model;
 	}
 	
@@ -30,8 +35,14 @@ public class LoginController {
 		model.setViewName("errorPage");
 		return model;
 	}
+	@GetMapping(value = { "/admin"})
+	public ModelAndView adminPage() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("admin");
+		return model;
+	}
 	
-	@RequestMapping(value = "/loginPage",method = RequestMethod.GET)
+	@GetMapping(value = "/loginPage")
 	public ModelAndView loginPage(@RequestParam(value = "error",required = false) String error,
 	@RequestParam(value = "logout",	required = false) String logout) {
 		ModelAndView model = new ModelAndView();
@@ -40,12 +51,13 @@ public class LoginController {
 		}
 
 		if (logout != null) {
-			model.addObject("message", "Logged out from JournalDEV successfully.");
+			model.addObject("message", "Logged out successfully.");
 		}
 
 		model.setViewName("loginPage");
 		return model;
 	}
+	
 	
 
 }
