@@ -18,7 +18,7 @@
     <h2>logged in as user</h2>
 </sec:authorize> 
 
-<h3>Welcome to JournalDEV Tutorials</h3>
+<h3>Welcome to Homepage</h3>
 <ul>
 	<li>Java 8 tutorial</li>
 	<li>Spring tutorial</li>

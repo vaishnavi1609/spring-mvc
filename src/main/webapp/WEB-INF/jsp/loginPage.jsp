@@ -7,7 +7,7 @@
 	<c:if test="${not empty error}"><div>${error}</div></c:if>
 	<c:if test="${not empty message}"><div>${message}</div></c:if>
 
-	<form name='login' action="<c:url value='/loginPage?${_csrf.parameterName}=${_csrf.token}' />" method='POST'>
+	<form name='login' action="<c:url value='/loginPage' />" method='POST'>
 		<table>
 			<tr>
 				<td>UserName:</td>
@@ -17,6 +17,10 @@
 				<td>Password:</td>
 				<td><input type='password' name='password' /></td>
 			</tr>
+			<tr>
+                <td>Remember Me:</td>
+                <td><input type="checkbox" name="remember-me" /></td>
+            </tr>
 			<tr>
 				<td colspan='2'><input name="submit" type="submit" value="submit" /></td>
 			</tr>

@@ -5,13 +5,17 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.mvc.service.LoginUserDetailService;
 
 
 @Configuration
@@ -22,17 +26,20 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	DataSource dataSource;
 	
+	@Autowired
+	UserDetailsService userDetailsService;
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder authenticationMgr) throws Exception {
 				
-		authenticationMgr
-		.jdbcAuthentication().passwordEncoder(getPasswordEncoder())
-			.dataSource(dataSource)
-			  .usersByUsernameQuery(
-					   "select username,password, enabled from users where username=?")
-					  .authoritiesByUsernameQuery(
-					   "select username, role from user_roles where username=?");
+		authenticationMgr.userDetailsService(userDetailsService);
+//		authenticationMgr
+//		.jdbcAuthentication().passwordEncoder(getPasswordEncoder())
+//			.dataSource(dataSource)
+//			  .usersByUsernameQuery(
+//					   "select username,password, enabled from users where username=?")
+//					  .authoritiesByUsernameQuery(
+//					   "select username, role from user_roles where username=?");
 	}
 	
 	@Override
@@ -48,7 +55,9 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 			   .and()
 			   .exceptionHandling().accessDeniedPage("/errorPage")
 			   .and()
-			   .logout().logoutSuccessUrl("/loginPage?logout");
+			   .logout().logoutSuccessUrl("/loginPage?logout").invalidateHttpSession(true)
+			   .and()
+			   .rememberMe().key("uniqueAndSecret").tokenValiditySeconds(10);
 		
 	}
 	
@@ -56,4 +65,9 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder getPasswordEncoder() {
 	    return NoOpPasswordEncoder.getInstance();
 	}
+	
+	@Bean
+    public DefaultAuthenticationEventPublisher authenticationEventPublisher() {
+        return new DefaultAuthenticationEventPublisher();
+    }
 }
