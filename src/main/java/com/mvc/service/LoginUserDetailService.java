@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mvc.entity.Role;
@@ -30,6 +31,9 @@ public class LoginUserDetailService implements UserDetailsService{
 	
 	@Autowired
 	LoginAttemptService loginAttemptService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginUserDetailService.class);
 
@@ -52,8 +56,9 @@ public class LoginUserDetailService implements UserDetailsService{
 		
 		List<String> list=user.getRoles().stream().map(Role::getRoles).collect(Collectors.toList());
 		
+		String encodedPassword=passwordEncoder.encode(user.getPassword());
 		return new org.springframework.security.core.userdetails.User(
-	              user.getUsername(), user.getPassword(),getAuthorities(list));
+	              user.getUsername(), encodedPassword,getAuthorities(list));
 	}
 	
 	private List<GrantedAuthority> getAuthorities(List<String> privileges) {

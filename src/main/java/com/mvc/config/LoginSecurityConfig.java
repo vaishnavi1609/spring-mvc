@@ -13,12 +13,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-
-
-
 
 @Configuration
 @EnableWebSecurity
@@ -36,7 +33,7 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 				
 		authenticationMgr
 				.userDetailsService(userDetailsService)
-				.passwordEncoder(getPasswordEncoder());
+				.passwordEncoder(passwordEncoder());
 		
 		
 /*		authenticationMgr
@@ -73,10 +70,10 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 	    return new RestAuthenticationFailureHandler();
 	  }
 	
-	@Bean
-	public PasswordEncoder getPasswordEncoder() {
-	    return NoOpPasswordEncoder.getInstance();
-	}
+	 @Bean
+		public PasswordEncoder passwordEncoder() {
+		    return new BCryptPasswordEncoder();
+		}
 	
 	@Bean
     public DefaultAuthenticationEventPublisher authenticationEventPublisher() {
