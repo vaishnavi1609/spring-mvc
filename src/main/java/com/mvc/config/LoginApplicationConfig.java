@@ -74,7 +74,7 @@ public class LoginApplicationConfig {
 		Properties properties = new Properties();
 		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.SQLServerDialect");
 		properties.setProperty("hibernate.show_sql", "true");
-		properties.setProperty("spring.jpa.hibernate.ddl-auto", "create");
+		properties.setProperty("spring.jpa.hibernate.ddl-auto", "update");
 		return properties;
 	}
 

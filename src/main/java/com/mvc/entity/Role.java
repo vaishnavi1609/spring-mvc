@@ -1,5 +1,6 @@
 package com.mvc.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -20,8 +21,11 @@ import lombok.Setter;
 public class Role {
 
 	@Id
-	private Integer user_role_id;
-	private String role;
+	@Column(name = "user_role_id")
+	private Integer id;
+	
+	@Column(name = "role")
+	private String roles;
 	
 	@ManyToOne
     @JoinColumn(name ="username")

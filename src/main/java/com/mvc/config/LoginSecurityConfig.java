@@ -1,5 +1,6 @@
 package com.mvc.config;
 
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
-import com.mvc.service.LoginUserDetailService;
+
 
 
 @Configuration
@@ -32,14 +34,19 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder authenticationMgr) throws Exception {
 				
-		authenticationMgr.userDetailsService(userDetailsService);
-//		authenticationMgr
-//		.jdbcAuthentication().passwordEncoder(getPasswordEncoder())
-//			.dataSource(dataSource)
-//			  .usersByUsernameQuery(
-//					   "select username,password, enabled from users where username=?")
-//					  .authoritiesByUsernameQuery(
-//					   "select username, role from user_roles where username=?");
+		authenticationMgr
+				.userDetailsService(userDetailsService)
+				.passwordEncoder(getPasswordEncoder());
+		
+		
+/*		authenticationMgr
+		.jdbcAuthentication().passwordEncoder(getPasswordEncoder())
+			.dataSource(dataSource)
+			  .usersByUsernameQuery(
+					   "select username,password, enabled from users where username=?")
+					  .authoritiesByUsernameQuery(
+					   "select username, role from user_roles where username=?"
+*/
 	}
 	
 	@Override
@@ -48,9 +55,8 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/homePage").access("hasRole('ROLE_USER')")
 			.antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
 			.and()
-				.formLogin().loginPage("/loginPage")
+				.formLogin().loginPage("/loginPage").failureHandler(authenticationFailureHandler())
 				.defaultSuccessUrl("/homePage")
-				.failureUrl("/loginPage?error")
 				.usernameParameter("username").passwordParameter("password")
 			   .and()
 			   .exceptionHandling().accessDeniedPage("/errorPage")
@@ -61,6 +67,12 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 	}
 	
+	 @Bean
+	  public AuthenticationFailureHandler authenticationFailureHandler()
+	  {
+	    return new RestAuthenticationFailureHandler();
+	  }
+	
 	@Bean
 	public PasswordEncoder getPasswordEncoder() {
 	    return NoOpPasswordEncoder.getInstance();
@@ -70,4 +82,5 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
     public DefaultAuthenticationEventPublisher authenticationEventPublisher() {
         return new DefaultAuthenticationEventPublisher();
     }
+	
 }

@@ -9,10 +9,13 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import lombok.Getter;
+
 @Service
+@Getter
 public class LoginAttemptService {
 
-	final int MAX_ATTEMPTS=2;
+	final int MAX_ATTEMPTS=3;
 	
 	private LoadingCache<String,Integer> attemptsCache;
 	
@@ -46,7 +49,6 @@ public class LoginAttemptService {
 	 public boolean isBlocked(String key) {
 
 	        try {
-	        	System.out.println("^^^^^"+attemptsCache.get(key));
 	            return attemptsCache.get(key) >= MAX_ATTEMPTS;
 	        } catch (ExecutionException e) {
 	            return false;

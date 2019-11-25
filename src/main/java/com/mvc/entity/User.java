@@ -3,6 +3,7 @@ package com.mvc.entity;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -26,8 +27,13 @@ import lombok.ToString;
 public class User {
 
 	@Id
+	@Column(name = "username")
 	private String username;
+	
+	@Column(name = "password")
 	private String password;
+	
+	@Column(name = "enabled")
 	private Boolean enabled;
 	
 	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)

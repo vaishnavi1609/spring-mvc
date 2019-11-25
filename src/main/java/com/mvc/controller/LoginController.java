@@ -29,6 +29,12 @@ public class LoginController {
 		return model;
 	}
 	
+	@GetMapping(value = { "/blockedPage"})
+	public ModelAndView blockedPage() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("blockedPage");
+		return model;
+	}
 	@GetMapping(value = { "/errorPage"})
 	public ModelAndView errorPage() {
 		ModelAndView model = new ModelAndView();
