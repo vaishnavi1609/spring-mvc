@@ -1,6 +1,8 @@
 package com.mvc.listener;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
@@ -19,9 +21,11 @@ public class AuthenticationFailureListener implements ApplicationListener<Authen
 	@Autowired
 	private LoginAttemptService loginAttemptService;
 	
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationFailureListener.class);
+	
 	@Override
 	public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent event) {
+		LOGGER.info("AuthenticationFailureBadCredentialsEvent occured");
 		loginAttemptService.loginFailed(event.getAuthentication().getPrincipal().toString());
 	}
 

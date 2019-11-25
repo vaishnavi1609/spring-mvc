@@ -4,6 +4,8 @@ import java.util.Properties;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,6 +25,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 
+
 @EnableWebMvc
 @EnableJpaRepositories(basePackages = "com.mvc.repository",
 						entityManagerFactoryRef = "dialerEntityManagerFactory", 
@@ -36,6 +39,7 @@ public class LoginApplicationConfig {
 	
 	@Autowired
 	private Environment env;
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoginApplicationConfig.class);
 
 	@Bean
 	public InternalResourceViewResolver viewResolver() {
@@ -53,6 +57,7 @@ public class LoginApplicationConfig {
 	     driverManagerDataSource.setUrl(env.getProperty("jdbc.connection.url"));
 	     driverManagerDataSource.setUsername(env.getProperty("jdbc.username"));
 	     driverManagerDataSource.setPassword(env.getProperty("jdbc.password"));
+	     LOGGER.debug("datasource initialized");
 	     return driverManagerDataSource;
 	 }
 	
@@ -68,6 +73,7 @@ public class LoginApplicationConfig {
 	    factory.setPackagesToScan("com.mvc.entity");
 	    factory.setDataSource(dataSource());
 	    factory.setJpaProperties(hibernateProps());
+	    LOGGER.debug("entity manager initialized");
 	    return factory;
 	}
 	Properties hibernateProps() {
@@ -82,6 +88,7 @@ public class LoginApplicationConfig {
 	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
 	    JpaTransactionManager txManager = new JpaTransactionManager();
 	    txManager.setEntityManagerFactory(entityManagerFactory);
+	    LOGGER.debug("transaction manager initialized");
 	    return txManager;
 	}
 	

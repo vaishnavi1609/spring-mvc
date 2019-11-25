@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,10 +31,13 @@ public class LoginUserDetailService implements UserDetailsService{
 	@Autowired
 	LoginAttemptService loginAttemptService;
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoginUserDetailService.class);
+
 	public UserDetails loadUserByUsername(String username) {
 
 		if(loginAttemptService.isBlocked(username))
 		{
+			LOGGER.error("USER BLOCKED!!");
 			throw new RuntimeException();
 		}		
 		Optional<User> optUser=userRepository.findById(username);
@@ -40,7 +45,10 @@ public class LoginUserDetailService implements UserDetailsService{
 		if(optUser.isPresent())
 			user=optUser.get();
 		else
+		{
+			LOGGER.debug("user with username {} not found",username);
 			throw new UsernameNotFoundException("User not found");
+		}
 		
 		List<String> list=user.getRoles().stream().map(Role::getRoles).collect(Collectors.toList());
 		
@@ -53,6 +61,7 @@ public class LoginUserDetailService implements UserDetailsService{
         for (String privilege : privileges) {
             authorities.add(new SimpleGrantedAuthority(privilege));
         }
+        LOGGER.debug("getting authorities for user");
         return authorities;
     }
 }
